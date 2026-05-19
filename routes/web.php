@@ -35,5 +35,8 @@ Route::get('/create', function () {
 Route::post("/reaction", [PostReactionController::class, 'reaction'])->name('reaction');
 
 
+Route::post("/createreaction",[PostReactionController::class,'createreaction'])->name('createreaction')
+
+
 Route::post('/register', [PostController::class, 'create'])->name('register');
 Route::get('/details', [PostController::class, 'index'])->name('details');

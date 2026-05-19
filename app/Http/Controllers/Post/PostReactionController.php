@@ -19,9 +19,15 @@ class PostReactionController extends Controller
     $this->service = $service;
   }
 
-  public function reaction(Request $request)
+  public function creatreaction()
   {
-    $data = $request->only(['post_id', 'user_id']);
+
+      session([
+        'user_id' => $data['user_id'],
+        'post_id' => $data['post_id']
+      ]
+    )
+
     return $this->service->create($data);
   }
 }

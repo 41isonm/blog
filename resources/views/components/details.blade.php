@@ -183,9 +183,11 @@
 
       <div class="post-actions">
 
-        <button class="like-btn">
+       <a href="{{route('createreaction')}}"
+        <button class="like-btn" (click)=route({createReaction})>
           👍 Gostei
         </button>
+        </a>
 
         <button class="comment-btn">
           💬 Comentar

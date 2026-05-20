@@ -24,20 +24,17 @@ class LoginController extends Controller
   {
     $email = $request->input('email');
     $password = $request->input('password');
-
     $user = $this->service->login($email, $password);
 
     if ($user) {
-
       session([
-        'user_id' => $user->id,
-        'user_name' => $user->name,
+        'user_id'    => $user->id,
+        'user_name'  => $user->name,
         'user_email' => $user->email
       ]);
 
-      $posts = \App\Models\Post::all();
 
-      return view('home.home', ['posts' => $posts]);
+      return redirect('/home');
     }
 
     return redirect()

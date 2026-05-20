@@ -14,26 +14,10 @@ class PostReactionService
     $this->model = $model;
   }
 
-  /**
-   * Find a model by its primary key.
-   *
-   * @param  mixed  $id
-   * @return \Illuminate\Database\Eloquent\Model|null
-   */
-  public function find($id): ?Model
-  {
-    return $this->model->find($id);
-  }
 
-  /**
-   * Get all records of the model.
-   *
-   * @param  array  $columns
-   * @return \Illuminate\Support\Collection
-   */
-  public function all(array $columns = ["*"]): Collection
+  public function getCountReaction($post): int
   {
-    return $this->model->all($columns);
+    return $this->model->where('post_id', $post)->count();
   }
 
 
@@ -41,17 +25,4 @@ class PostReactionService
   {
     return $this->model->create($attributes);
   }
-
-
-
-  /*
-  public function update(array $attributes, $id): Model
-  {
-    $model = $this->find($id);
-    if ($model) {
-      $model->update($attributes);
-      return $model;
-    }
-    throw new \Exception("Model not found");
-  }*/
 }

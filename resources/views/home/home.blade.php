@@ -99,7 +99,7 @@
   <div class="posts-section">
 
     <ul class="posts-list">
-      <x-details :posts="$posts" />
+      <x-details :posts="$posts" :reactionCounts="$reactionCounts" />
     </ul>
   </div>
 

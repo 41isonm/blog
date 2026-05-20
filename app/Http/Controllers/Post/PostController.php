@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Post;
 use App\Http\Controllers\Controller;
 use App\Providers\Service\Post\PostService;
 use Illuminate\Http\Request;
+use App\Models\PostReaction;
 
 class PostController extends Controller
 {
@@ -21,7 +22,16 @@ class PostController extends Controller
   function index()
   {
     $posts = $this->service->all();
-    return view('home.home', ['posts' => $posts]);
+
+    $posts = $this->service->all();
+
+
+    $reactionCounts = PostReaction::selectRaw('post_id, count(*) as total')
+      ->groupBy('post_id')
+      ->pluck('total', 'post_id')
+      ->mapWithKeys(fn($total, $postId) => [(int) $postId => (int) $total]);
+
+    return view('home.home', compact('posts', 'reactionCounts'));
   }
 
   function find(int $id)

@@ -32,10 +32,11 @@ Route::get('/create', function () {
 })->name('create');
 
 
-Route::post("/reaction", [PostReactionController::class, 'reaction'])->name('reaction');
 
 
-Route::post("/createreaction",[PostReactionController::class,'createreaction'])->name('createreaction')
+Route::post("/createreaction", [PostReactionController::class, 'createReaction'])->name('createreaction');
+Route::post("/listreaction", [PostReactionController::class, 'getCountReaction'])->name('getCountReaction');
+
 
 
 Route::post('/register', [PostController::class, 'create'])->name('register');

@@ -23,6 +23,7 @@
       --accent-lt: #fdecea;
       --blue: #1a56db;
       --blue-dk: #1341b0;
+      --blue-lt: #eef2fd;
       --slate: #4b5563;
       --slate-lt: #9ca3af;
       --text: #1c1c1c;
@@ -79,12 +80,6 @@
       border: 1px solid var(--border);
       box-shadow: var(--shadow);
       overflow: hidden;
-      transition: box-shadow .25s, transform .25s;
-    }
-
-    .post-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 28px rgba(0, 0, 0, .11);
     }
 
     .card-body {
@@ -116,7 +111,6 @@
       color: var(--slate-lt);
     }
 
-    /* Pill de curtidas na linha de meta */
     .reaction-pill {
       display: inline-flex;
       align-items: center;
@@ -128,7 +122,6 @@
       padding: 3px 10px;
       border-radius: 99px;
       border: 1px solid #f5c2be;
-      letter-spacing: .02em;
     }
 
     .post-title {
@@ -146,7 +139,6 @@
       word-break: break-word;
     }
 
-    /* Actions bar */
     .card-footer {
       display: flex;
       align-items: center;
@@ -168,15 +160,10 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: background .2s, transform .15s;
+      text-decoration: none;
       white-space: nowrap;
     }
 
-    .btn:active {
-      transform: scale(.96);
-    }
-
-    /* Like button com contador embutido */
     .btn-like {
       background: var(--accent);
       color: #fff;
@@ -212,6 +199,10 @@
       background: var(--blue-dk);
     }
 
+    .btn-comment.active {
+      background: var(--blue-dk);
+    }
+
     .btn-share {
       background: transparent;
       color: var(--slate);
@@ -231,7 +222,205 @@
       flex: 1;
     }
 
-    /* Empty state */
+    /* Seção de comentários — visível ou não via classe PHP */
+    .comments-section {
+      border-top: 1px solid var(--border);
+      background: #f7f5f2;
+    }
+
+    .comments-inner {
+      padding: 20px 30px 24px;
+    }
+
+    .comments-header {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--slate-lt);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .comments-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .comment-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 12px;
+    }
+
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--blue-lt);
+      border: 1.5px solid #c7d7f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--blue);
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+
+    .comment-bubble {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0 10px 10px 10px;
+      padding: 10px 14px;
+      flex: 1;
+    }
+
+    .comment-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+
+    .comment-author {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .comment-time {
+      font-size: 11px;
+      color: var(--slate-lt);
+    }
+
+    .comment-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--slate);
+      word-break: break-word;
+    }
+
+    .no-comments {
+      text-align: center;
+      padding: 20px 0;
+      color: var(--slate-lt);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .no-comments span {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .comment-form-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .comment-form-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-lt);
+      border: 1.5px solid #f5c2be;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .comment-input-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-textarea {
+      width: 100%;
+      min-height: 72px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface);
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .comment-textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 86, 219, .08);
+    }
+
+    .comment-textarea::placeholder {
+      color: var(--slate-lt);
+    }
+
+    .comment-form-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-submit-comment {
+      background: var(--blue);
+      color: #fff;
+      padding: 8px 20px;
+      font-size: 13px;
+    }
+
+    .btn-submit-comment:hover {
+      background: var(--blue-dk);
+    }
+
+    .flash {
+      max-width: 780px;
+      margin: 0 auto 20px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .flash-success {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .flash-error {
+      background: var(--accent-lt);
+      color: var(--accent-dk);
+      border: 1px solid #f5c2be;
+    }
+
     .empty-state {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -270,6 +459,10 @@
         padding: 12px 18px;
       }
 
+      .comments-inner {
+        padding: 16px 18px 20px;
+      }
+
       .btn {
         flex: 1;
         justify-content: center;
@@ -284,6 +477,18 @@
 
 <body>
 
+  @if(session('success'))
+  <div class="flash flash-success">✅ {{ session('success') }}</div>
+  @endif
+  @if(session('error'))
+  <div class="flash flash-error">⚠️ {{ session('error') }}</div>
+  @endif
+
+  @php
+
+  $openPost = request()->query('open');
+  @endphp
+
   <header class="page-header">
     <h1>Posts Recentes</h1>
     @if(isset($posts) && count($posts) > 0)
@@ -296,29 +501,33 @@
     @if(isset($posts) && count($posts) > 0 && isset($reactionCounts))
     @foreach($posts as $index => $post)
 
-    {{-- $reactionCounts vem do controller: [ post_id => total ] --}}
-    @php $count = $reactionCounts[$post->id] ?? 0; @endphp
+    @php
+    $count = $reactionCounts[$post->id] ?? 0;
+    $comments = $commentsByPost->get((string) $post->id) ?? collect();
+    $commentCount = count($comments);
+    $isOpen = (string) $openPost === (string) $post->id;
+
+    $toggleUrl = $isOpen
+    ? url('/home')
+    : url('/home') . '?open=' . $post->id;
+    @endphp
 
     <article class="post-card">
-      <div class="card-body">
 
+      <div class="card-body">
         <div class="post-meta">
           <span class="post-index">#{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
           <span class="meta-dot">·</span>
           <span class="post-date">{{ \Carbon\Carbon::parse($post->created_at)->format('d M Y, H:i') }}</span>
 
-          {{-- Pill só aparece quando há pelo menos 1 curtida --}}
           @if($count > 0)
           <span class="meta-dot">·</span>
-          <span class="reaction-pill">
-            ❤️ {{ $count }} {{ $count === 1 ? 'curtida' : 'curtidas' }}
-          </span>
+          <span class="reaction-pill">❤️ {{ $count }} {{ $count === 1 ? 'curtida' : 'curtidas' }}</span>
           @endif
         </div>
 
         <h2 class="post-title">{{ $post->title }}</h2>
         <p class="post-content">{{ $post->content }}</p>
-
       </div>
 
       <div class="card-footer">
@@ -335,13 +544,85 @@
           </button>
         </form>
 
-        <button type="button" class="btn btn-comment">💬 Comentar</button>
+        {{-- Link puro — zero JS. PHP lê ?open= e decide o que renderizar --}}
+        <a href="{{ $toggleUrl }}" class="btn btn-comment {{ $isOpen ? 'active' : '' }}">
+          💬
+          @if($commentCount > 0)
+          {{ $commentCount }} {{ $commentCount === 1 ? 'comentário' : 'comentários' }}
+          @else
+          Comentar
+          @endif
+        </a>
 
         <span class="actions-spacer"></span>
-
-        <button type="button" class="btn btn-share">📤 Compartilhar</button>
+        <span class="btn btn-share">📤 Compartilhar</span>
 
       </div>
+
+      @if($isOpen)
+      <div class="comments-section">
+        <div class="comments-inner">
+
+          <p class="comments-header">
+            {{ $commentCount }} {{ $commentCount === 1 ? 'comentário' : 'comentários' }}
+          </p>
+
+          @if($commentCount > 0)
+          <div class="comment-list">
+            @foreach($comments as $comment)
+            @php
+            $authorName = $comment->user_name ?? 'Anônimo';
+            $initial = mb_strtoupper(mb_substr($authorName, 0, 1));
+            @endphp
+            <div class="comment-item">
+              <div class="comment-avatar">{{ $initial }}</div>
+              <div class="comment-bubble">
+                <div class="comment-meta">
+                  <span class="comment-author">{{ $authorName }}</span>
+                  <span class="comment-time">
+                    {{ \Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}
+                  </span>
+                </div>
+                <p class="comment-text">{{ $comment->content }}</p>
+              </div>
+            </div>
+            @endforeach
+          </div>
+          @else
+          <div class="no-comments">
+            <span>💬</span>
+            Nenhum comentário ainda. Seja o primeiro!
+          </div>
+          @endif
+
+          @php $userInitial = mb_strtoupper(mb_substr(session('user_name', 'U'), 0, 1)); @endphp
+
+          <form action="{{ route('comments.store') }}" method="POST" class="comment-form">
+            @csrf
+            <input type="hidden" name="post_id" value="{{ $post->id }}">
+            <input type="hidden" name="user_id" value="{{ session('user_id') }}">
+            <input type="hidden" name="user_name" value="{{ session('user_name') }}">
+
+            <div class="comment-form-row">
+              <div class="comment-form-avatar">{{ $userInitial }}</div>
+              <div class="comment-input-wrap">
+                <textarea
+                  name="content"
+                  class="comment-textarea"
+                  placeholder="Escreva um comentário..."
+                  required
+                  maxlength="1000"></textarea>
+                <div class="comment-form-actions">
+                  <button type="submit" class="btn btn-submit-comment">✉️ Publicar</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+      @endif
+
     </article>
 
     @endforeach

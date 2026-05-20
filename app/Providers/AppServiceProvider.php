@@ -6,11 +6,13 @@ use Illuminate\Support\ServiceProvider;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\PostReaction;
+use App\Models\Comments;
 
 
 use App\Providers\Service\Post\PostService;
 use App\Providers\Service\User\UserService;
 use App\Providers\Service\Post\PostReactionService;
+use App\Providers\Service\Comments\CommentsService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(PostReactionService::class, function ($app) {
             return new PostReactionService(new PostReaction());
+        });
+
+
+
+        $this->app->singleton(CommentsService::class, function ($app) {
+            return new CommentsService(new Comments());
         });
     }
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\Service\Post\PostService;
 use Illuminate\Http\Request;
 use App\Models\PostReaction;
+use App\Models\Comments;
 
 class PostController extends Controller
 {
@@ -23,15 +24,18 @@ class PostController extends Controller
   {
     $posts = $this->service->all();
 
-    $posts = $this->service->all();
-
-
     $reactionCounts = PostReaction::selectRaw('post_id, count(*) as total')
       ->groupBy('post_id')
       ->pluck('total', 'post_id')
       ->mapWithKeys(fn($total, $postId) => [(int) $postId => (int) $total]);
 
-    return view('home.home', compact('posts', 'reactionCounts'));
+    // Carrega todos os comentários de uma vez, agrupados por post_id
+    $commentsByPost = Comments::whereIn('post_id', $posts->pluck('id'))
+      ->orderBy('created_at', 'asc')
+      ->get()
+      ->groupBy(fn($c) => (string) $c->post_id);
+
+    return view('home.home', compact('posts', 'reactionCounts', 'commentsByPost'));
   }
 
   function find(int $id)

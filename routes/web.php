@@ -41,3 +41,10 @@ Route::post("/listreaction", [PostReactionController::class, 'getCountReaction']
 
 Route::post('/register', [PostController::class, 'create'])->name('register');
 Route::get('/details', [PostController::class, 'index'])->name('details');
+
+
+
+use App\Http\Controllers\Comments\CommentsController;
+
+Route::post('/comments', [CommentsController::class, 'store'])->name('comments.store');
+Route::get('/comments', [CommentsController::class, 'select'])->name('comments.select');

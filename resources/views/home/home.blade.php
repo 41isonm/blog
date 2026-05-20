@@ -9,7 +9,7 @@
   }
 
   .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 40px auto;
     padding: 20px;
   }
@@ -51,6 +51,12 @@
     transform: translateY(-2px);
   }
 
+  .posts-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+
   .posts-section {
     background: white;
     padding: 25px;
@@ -71,6 +77,11 @@
     margin: 0;
   }
 
+  .empty-message {
+    color: #888;
+    font-size: 15px;
+  }
+
   @media (max-width: 768px) {
     .container {
       padding: 15px;
@@ -79,8 +90,22 @@
     .hero h1 {
       font-size: 26px;
     }
+
+    .posts-wrapper {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
+
+@php
+$myPosts = $posts->filter(function ($post) {
+return $post->user_id == session('user_id');
+});
+
+$otherPosts = $posts->filter(function ($post) {
+return $post->user_id != session('user_id');
+});
+@endphp
 
 <div class="container">
 
@@ -96,11 +121,52 @@
     </a>
   </div>
 
-  <div class="posts-section">
+  <div class="posts-wrapper">
 
-    <ul class="posts-list">
-      <x-details :posts="$posts" :reactionCounts="$reactionCounts" />
-    </ul>
+    {{-- MY POSTS --}}
+    <div class="posts-section">
+
+      <h2>My Posts</h2>
+
+      @if($myPosts->count() > 0)
+
+      <ul class="posts-list">
+        <x-details
+          :posts="$myPosts"
+          :reactionCounts="$reactionCounts"
+          :commentsByPost="$commentsByPost" />
+      </ul>
+
+      @else
+      <p class="empty-message">
+        You haven't created any posts yet.
+      </p>
+      @endif
+
+    </div>
+
+    {{-- OTHER POSTS --}}
+    <div class="posts-section">
+
+      <h2>All Posts</h2>
+
+      @if($otherPosts->count() > 0)
+
+      <ul class="posts-list">
+        <x-details
+          :posts="$otherPosts"
+          :reactionCounts="$reactionCounts"
+          :commentsByPost="$commentsByPost" />
+      </ul>
+
+      @else
+      <p class="empty-message">
+        No posts available.
+      </p>
+      @endif
+
+    </div>
+
   </div>
 
 </div>

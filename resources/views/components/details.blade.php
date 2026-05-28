@@ -624,7 +624,6 @@
                     class="reaction-btn {{ $userHasReacted ? 'active' : '' }}"
                     data-comment-id="{{ $comment->id }}"
                     data-user-id="{{ session('user_id') }}"
-                    data-post-id="{{ $post->id }}"
                     onclick="toggleCommentReaction(this)">
                     👍
                     @if($commentReactionCount > 0)
@@ -686,7 +685,6 @@
 
   <script>
     async function toggleCommentReaction(button) {
-      console.log('Clicou no botão de reação do comentário', button);
       const commentId = button.dataset.commentId;
       const userId = button.dataset.userId;
 
@@ -704,7 +702,6 @@
           },
           body: JSON.stringify({
             comment_id: commentId,
-            post_id: button.dataset.postId,
             user_id: userId,
             reaction: '👍'
           })

@@ -8,10 +8,17 @@
     padding: 0;
   }
 
-  .container {
-    max-width: 1000px;
-    margin: 40px auto;
+  .main-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
     padding: 20px;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 30px;
+  }
+
+  .content-area {
+    width: 100%;
   }
 
   .hero {
@@ -53,7 +60,7 @@
 
   .posts-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 25px;
   }
 
@@ -62,6 +69,7 @@
     padding: 25px;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    scroll-margin-top: 20px;
   }
 
   .posts-section h2 {
@@ -82,17 +90,24 @@
     font-size: 15px;
   }
 
-  @media (max-width: 768px) {
-    .container {
-      padding: 15px;
+  @media (max-width: 1024px) {
+    .main-wrapper {
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
 
     .hero h1 {
       font-size: 26px;
     }
+  }
 
-    .posts-wrapper {
-      grid-template-columns: 1fr;
+  @media (max-width: 768px) {
+    .main-wrapper {
+      padding: 15px;
+    }
+
+    .hero h1 {
+      font-size: 24px;
     }
   }
 </style>
@@ -107,70 +122,90 @@ return $post->user_id != session('user_id');
 });
 @endphp
 
-<div class="container">
+<div class="main-wrapper">
 
-  <div class="hero">
-    <h1>Welcome to the Blog</h1>
+  {{-- SIDEBAR --}}
+  <aside>
+    <x-sidebar />
+  </aside>
 
-    <p>
-      Share your ideas, experiences and thoughts with everyone.
-    </p>
+  {{-- MAIN CONTENT --}}
+  <div class="content-area">
 
-    <a href="/create" class="create-btn">
-      Create New Post
-    </a>
-  </div>
+    <div class="hero">
+      <h1>Welcome to the Blog</h1>
 
-  <div class="posts-wrapper">
-
-    {{-- MY POSTS --}}
-    <div class="posts-section">
-
-      <h2>My Posts</h2>
-
-      @if($myPosts->count() > 0)
-
-      <ul class="posts-list">
-        <x-details
-          :posts="$myPosts"
-          :reactionCounts="$reactionCounts"
-          :commentsByPost="$commentsByPost"
-          :commentReactionCounts="$commentReactionCounts"
-          :userCommentReactions="$userCommentReactions" />
-      </ul>
-
-      @else
-      <p class="empty-message">
-        You haven't created any posts yet.
+      <p>
+        Share your ideas, experiences and thoughts with everyone.
       </p>
-      @endif
 
+      <a href="/create" class="create-btn">
+        Create New Post
+      </a>
     </div>
 
-    {{-- OTHER POSTS --}}
-    <div class="posts-section">
+    <div class="posts-wrapper">
 
-      <h2>All Posts</h2>
+      {{-- MY POSTS --}}
+      <div class="posts-section" data-tab="my-posts" id="my-posts">
 
-      @if($otherPosts->count() > 0)
+        <h2>📝 My Posts</h2>
 
-      <ul class="posts-list">
-        <x-details
-          :posts="$otherPosts"
-          :reactionCounts="$reactionCounts"
-          :commentsByPost="$commentsByPost"
-          :commentReactionCounts="$commentReactionCounts"
-          :userCommentReactions="$userCommentReactions" />
-      </ul>
+        @if($myPosts->count() > 0)
 
-      @else
-      <p class="empty-message">
-        No posts available.
-      </p>
-      @endif
+        <ul class="posts-list">
+          <x-details
+            :posts="$myPosts"
+            :reactionCounts="$reactionCounts"
+            :commentsByPost="$commentsByPost"
+            :commentReactionCounts="$commentReactionCounts"
+            :userCommentReactions="$userCommentReactions" />
+        </ul>
+
+        @else
+        <p class="empty-message">
+          You haven't created any posts yet.
+        </p>
+        @endif
+
+      </div>
+
+      {{-- OTHER POSTS --}}
+      <div class="posts-section" data-tab="all-posts" id="all-posts">
+
+        <h2>🌍 All Posts</h2>
+
+        @if($otherPosts->count() > 0)
+
+        <ul class="posts-list">
+          <x-details
+            :posts="$otherPosts"
+            :reactionCounts="$reactionCounts"
+            :commentsByPost="$commentsByPost"
+            :commentReactionCounts="$commentReactionCounts"
+            :userCommentReactions="$userCommentReactions" />
+        </ul>
+
+        @else
+        <p class="empty-message">
+          No posts available.
+        </p>
+        @endif
+
+      </div>
 
     </div>
 
   </div>
 
 </div>
+
+<script>
+  // Initialize sidebar links on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const myPostsLink = document.querySelector('[href="#my-posts"]');
+    if (myPostsLink) {
+      myPostsLink.classList.add('active');
+    }
+  });
+</script>

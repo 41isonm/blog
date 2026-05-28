@@ -134,7 +134,9 @@ return $post->user_id != session('user_id');
         <x-details
           :posts="$myPosts"
           :reactionCounts="$reactionCounts"
-          :commentsByPost="$commentsByPost" />
+          :commentsByPost="$commentsByPost"
+          :commentReactionCounts="$commentReactionCounts"
+          :userCommentReactions="$userCommentReactions" />
       </ul>
 
       @else
@@ -156,7 +158,9 @@ return $post->user_id != session('user_id');
         <x-details
           :posts="$otherPosts"
           :reactionCounts="$reactionCounts"
-          :commentsByPost="$commentsByPost" />
+          :commentsByPost="$commentsByPost"
+          :commentReactionCounts="$commentReactionCounts"
+          :userCommentReactions="$userCommentReactions" />
       </ul>
 
       @else

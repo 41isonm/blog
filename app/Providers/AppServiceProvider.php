@@ -7,12 +7,15 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\PostReaction;
 use App\Models\Comments;
+use App\Models\CommentsReaction;
 
 
 use App\Providers\Service\Post\PostService;
 use App\Providers\Service\User\UserService;
 use App\Providers\Service\Post\PostReactionService;
 use App\Providers\Service\Comments\CommentsService;
+use App\Providers\Service\CommentsReaction\CommentsReactionService;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +40,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(CommentsService::class, function ($app) {
             return new CommentsService(new Comments());
+        });
+
+
+        $this->app->singleton(CommentsReactionService::class, function ($app) {
+            return new CommentsReactionService(new CommentsReaction());
         });
     }
 

@@ -4,7 +4,8 @@ use App\Http\Controllers\Login\LoginController;
 use App\Http\Controllers\Post\PostReactionController;
 use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\User\UserController;
-
+use App\Http\Controllers\Comments\CommentsController;
+use App\Http\Controllers\CommentsReaction\CommentsReactionController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -44,7 +45,10 @@ Route::get('/details', [PostController::class, 'index'])->name('details');
 
 
 
-use App\Http\Controllers\Comments\CommentsController;
 
 Route::post('/comments', [CommentsController::class, 'store'])->name('comments.store');
 Route::get('/comments', [CommentsController::class, 'select'])->name('comments.select');
+Route::post('/comments-reaction', [CommentsReactionController::class, 'store'])->name('comments-reaction.store');
+Route::get('/comments-reaction/count', [CommentsReactionController::class, 'getCount'])->name('comments-reaction.count');
+Route::post('/comments-reaction/counts', [CommentsReactionController::class, 'getCountMultiple'])->name('comments-reaction.counts');
+Route::get('/comments-reaction/user-reaction', [CommentsReactionController::class, 'getUserReaction'])->name('comments-reaction.user-reaction');

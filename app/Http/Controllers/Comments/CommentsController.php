@@ -37,9 +37,8 @@ class CommentsController extends Controller
 
   public function select(Request $request)
   {
-    var_dump($request->input('post_id'));
+
     $comments = $this->service->listCommentsByPostId($request->input('post_id'));
-    var_dump($comments);
     return response()->json($comments);
   }
 }

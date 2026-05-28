@@ -305,11 +305,43 @@
       color: var(--slate-lt);
     }
 
-    .comment-text {
-      font-size: 14px;
-      line-height: 1.6;
+    .comment-reactions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .reaction-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 99px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 600;
       color: var(--slate);
-      word-break: break-word;
+    }
+
+    .reaction-btn:hover {
+      border-color: var(--blue);
+      background: var(--blue-lt);
+      color: var(--blue);
+    }
+
+    .reaction-btn.active {
+      background: var(--blue-lt);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    .reaction-count {
+      font-size: 11px;
+      color: var(--slate-lt);
     }
 
     .no-comments {
@@ -573,6 +605,8 @@
             @php
             $authorName = $comment->user_name ?? 'Anônimo';
             $initial = mb_strtoupper(mb_substr($authorName, 0, 1));
+            $commentReactionCount = $commentReactionCounts[$comment->id] ?? 0;
+            $userHasReacted = $userCommentReactions[$comment->id] ?? false;
             @endphp
             <div class="comment-item">
               <div class="comment-avatar">{{ $initial }}</div>
@@ -584,6 +618,20 @@
                   </span>
                 </div>
                 <p class="comment-text">{{ $comment->content }}</p>
+                <div class="comment-reactions">
+                  <button
+                    type="button"
+                    class="reaction-btn {{ $userHasReacted ? 'active' : '' }}"
+                    data-comment-id="{{ $comment->id }}"
+                    data-user-id="{{ session('user_id') }}"
+                    data-post-id="{{ $post->id }}"
+                    onclick="toggleCommentReaction(this)">
+                    👍
+                    @if($commentReactionCount > 0)
+                    <span class="reaction-count">{{ $commentReactionCount }}</span>
+                    @endif
+                  </button>
+                </div>
               </div>
             </div>
             @endforeach
@@ -635,6 +683,103 @@
     @endif
 
   </main>
+
+  <script>
+    async function toggleCommentReaction(button) {
+      console.log('Clicou no botão de reação do comentário', button);
+      const commentId = button.dataset.commentId;
+      const userId = button.dataset.userId;
+
+      if (!userId || userId === '') {
+        alert('Você precisa estar autenticado para reagir.');
+        return;
+      }
+
+      try {
+        const response = await fetch('{{ route("comments-reaction.store") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({
+            comment_id: commentId,
+            post_id: button.dataset.postId,
+            user_id: userId,
+            reaction: '👍'
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          button.classList.toggle('active');
+
+          const countSpan = button.querySelector('.reaction-count');
+          if (data.reaction) {
+            if (!countSpan) {
+              const span = document.createElement('span');
+              span.className = 'reaction-count';
+              span.textContent = '1';
+              button.appendChild(span);
+            }
+          } else {
+            if (countSpan) {
+              const currentCount = parseInt(countSpan.textContent) || 1;
+              if (currentCount <= 1) {
+                countSpan.remove();
+              } else {
+                countSpan.textContent = currentCount - 1;
+              }
+            }
+          }
+
+          updateCommentReactionCounts([commentId]);
+        }
+      } catch (error) {
+        console.error('Erro ao reagir:', error);
+        alert('Erro ao processar reação. Tente novamente.');
+      }
+    }
+
+    async function updateCommentReactionCounts(commentIds) {
+      try {
+        const response = await fetch('{{ route("comments-reaction.counts") }}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '{{ csrf_token() }}'
+          },
+          body: JSON.stringify({
+            comment_ids: commentIds
+          })
+        });
+
+        const counts = await response.json();
+
+        commentIds.forEach(commentId => {
+          const buttons = document.querySelectorAll(`[data-comment-id="${commentId}"]`);
+          buttons.forEach(button => {
+            let countSpan = button.querySelector('.reaction-count');
+            const count = counts[commentId] || 0;
+
+            if (count > 0) {
+              if (!countSpan) {
+                countSpan = document.createElement('span');
+                countSpan.className = 'reaction-count';
+                button.appendChild(countSpan);
+              }
+              countSpan.textContent = count;
+            } else {
+              if (countSpan) countSpan.remove();
+            }
+          });
+        });
+      } catch (error) {
+        console.error('Erro ao atualizar contagens:', error);
+      }
+    }
+  </script>
 
 </body>
 
